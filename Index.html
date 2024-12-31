@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Payment Gateway</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+                <!-- popup box start from here -->
+<div id="popup_wrapper">
+    <div class="box">
+        <div class="text">*After you paid, you must come back here to submit the Ref/UTR No. (12 digits). Then your money is credited to your account.</div>
+        <div class="image"><img src="utr_example.png" alt="image" width="100%"></div>
+        <button onclick="document.querySelector('#popup_wrapper').style.display='none';">OK</button>
+    </div>
+</div>
+                <!-- popup box end here -->
+                
+                <!-- step 1 start from here -->
+<section id="step_1">
+    <!-- alert -->
+    <div class="copyAlert">Text Copied!</div>
+    <div class="-container">
+        <div class="title">Step 1 : Copy Amount and Back Account information</div>
+        <div class="wrapper">
+            <h5>Amount</h5>
+            <div class="right_item">
+                <span id="amount_input"></span>
+                <button onclick="copyText('amount_input')">Copy</button>
+            </div>
+        </div>
+        <hr>
+        <div class="wrapper">
+            <h5>Name</h5>
+            <div class="right_item">
+                <span id="name_input"></span>
+                <button onclick="copyText('name_input')">Copy</button>
+            </div>
+        </div>
+        <hr>
+        <div class="wrapper">
+            <h5>VPA/UPI</h5>
+            <div class="right_item">
+                <span id="vpa_input"></span>
+                <button onclick="copyText('vpa_input')">Copy</button>
+            </div>
+        </div>
+    </div>
+</section>
+                <!-- step 1 end here -->
+
+                <!-- step 2 start from here -->
+<section id="step_2">
+    <div class="-container">
+        <div class="title">Step 2 : Transfer and don't modify this amount to us</div>
+        <div class="item"><i class="bi bi-exclamation-triangle"></i> Please record your reference No. {Ref No.} after payment</div>
+    </div>
+</section>
+                <!-- step 2 end here -->
+
+                <!-- step 3 start from here -->
+<section id="step_3">
+    <!-- error message -->
+    <div class="errMsg">Please input 12 digit reference code</div>
+    <!-- success message -->
+    <div class="succMsg">succeed!</div>
+        <!-- main -->
+    <div class="-container">
+        <div class="title">Step 3 : Please enter Ref No. to complete the payment</div>
+        <div class="item"><i class="bi bi-exclamation-triangle"></i> Be sure to return this page to fill the UTR numbers after you have completed your payment</div>
+        <form name="upiForm" action="" onsubmit="return valid_upi_form()" method="post">
+            <input type="text" id="refCode" placeholder="UTR (UPI Ref. ID) must be 12 digits">
+            <input type="submit" value="Submit UTR">
+        </form>
+    </div>
+</section>
+
+                <!-- step 3 end here -->
+<footer><h4>safe and faithful</h4></footer>
+</body>
+</html>
+
+                <!-- js codes start from here -->
+<script>
+        // copy elements
+    function copyText(element) {
+        var copyText = document.getElementById(element).innerText;
+        var copyAlert = document.querySelector("#step_1 .copyAlert");
+
+        navigator.clipboard.writeText(copyText);
+        copyAlert.classList.add("active");
+        setTimeout(function() {copyAlert.classList.remove("active")}, 1500);
+    }
+
+    // get data 
+    window.addEventListener('load', () => {
+        const params = (new URL(document.location)).searchParams;
+        const AMNT = params.get('amntInput');
+        const NAME = params.get('nameInput');
+        const VPA = params.get('vpaInput');
+
+        document.getElementById("amount_input").innerHTML = AMNT;
+        document.getElementById("name_input").innerHTML = NAME;
+        document.getElementById("vpa_input").innerHTML = VPA;
+    });
+
+    // UPI form validation
+    function valid_upi_form() {
+        let reference = document.getElementById("refCode").value;
+        let countRef = reference.length;
+        let err = document.querySelector("#step_3 .errMsg");
+        let succ = document.querySelector("#step_3 .succMsg");
+
+        if (countRef != 12) {
+            err.classList.add("active");
+            setTimeout(function() {err.classList.remove("active")}, 1500);
+            return false;
+        } else {
+            succ.classList.add("active");
+            setTimeout(function() {succ.classList.remove("active")}, 1500);
+            return false;
+        }
+    }
+</script>
+                <!-- js codes end here -->
